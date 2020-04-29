@@ -58,16 +58,6 @@ module.exports = router => {
 			console.log(err.data);
 		}
 	});
-
-	router.get("/users", async (req, res) => {
-		try {
-			const users = await User.query();
-			res.send(users);
-		} catch (err) {
-			console.log(err instanceof objection.ValidationError);
-			console.log(err.data);
-		}
-	});
 };
 
 function createStatusCodeError(statusCode) {

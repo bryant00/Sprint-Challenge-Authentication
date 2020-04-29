@@ -7,8 +7,9 @@ const bodyParser = require("body-parser");
 const knexConfig = require("./knexfile");
 const promiseRouter = require("express-promise-router");
 //router APIs
-const AuthRouter = require("./auth/auth-routes");
+const AuthRouter = require("./auth/auth-router");
 const JokesRouter = require("./jokes/jokes-router.js");
+const UsersRouter = require("./users/users-router.js");
 //middleware
 const authenticate = require("./auth/authenticate-middleware.js");
 const { Model } = require("objection");
@@ -19,6 +20,7 @@ const knex = require("./database/dbConfig.js");
 Model.knex(knex); //objection
 const router = promiseRouter();
 const jokesRouter = promiseRouter();
+const usersRouter = promiseRouter();
 const app = express();
 app.use(
   cors({
@@ -33,10 +35,13 @@ app.use(morgan("dev"));
 app.set("json spaces", 2);
 app.use(helmet());
 app.use("/api/auth", router);
-app.use("/api/jokes", authenticate, jokesRouter);
+//app.use("/api/jokes", authenticate, jokesRouter);
+app.use("/api/jokes", jokesRouter);
+app.use("/api/users", usersRouter);
 
 AuthRouter(router);
 JokesRouter(jokesRouter);
+UsersRouter(usersRouter);
 
 app.use((err, req, res, next) => {
   if (err) {
